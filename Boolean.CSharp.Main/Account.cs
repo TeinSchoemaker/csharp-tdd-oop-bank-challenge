@@ -35,11 +35,13 @@ namespace Boolean.CSharp.Main
 
         public void Deposit(decimal amount, DateTime date)
         {
+            if (amount <= 0) throw new ArgumentException("Deposit must be more than 0");
             Transactions.Add(new Transaction(date, amount, 0));
         }
 
         public void Withdraw(decimal amount, DateTime date)
         {
+            if (amount <= 0) throw new ArgumentException("Withdrawl must be more than 0");
             Transactions.Add(new Transaction(date, 0, amount));
         }
 
@@ -58,7 +60,7 @@ namespace Boolean.CSharp.Main
             foreach (var transaction in Transactions)
             {
                 balance += transaction.Credit - transaction.Debit;
-                statement.AppendLine($"{transaction.Date:dd/mm/yyyy} || " + $"{transaction.Credit} || " + $"{transaction.Debit} || " + $"{balance}");
+                statement.AppendLine($"{transaction.Date:dd/MM/yyyy} || " + $"{transaction.Credit} || " + $"{transaction.Debit} || " + $"{balance}");
             }
 
             return statement.ToString();

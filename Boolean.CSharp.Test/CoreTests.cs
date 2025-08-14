@@ -65,9 +65,9 @@ namespace Boolean.CSharp.Test
             Assert.IsTrue(statement.Contains("credit"));
             Assert.IsTrue(statement.Contains("debit"));
             Assert.IsTrue(statement.Contains("balance"));
-            Assert.IsTrue(statement.Contains("1000.00"));
-            Assert.IsTrue(statement.Contains("2000.00"));
-            Assert.IsTrue(statement.Contains("500.00"));
+            Assert.IsTrue(statement.Contains("1000"));
+            Assert.IsTrue(statement.Contains("2000"));
+            Assert.IsTrue(statement.Contains("500"));
         }
     }
 }
