@@ -43,6 +43,11 @@ namespace Boolean.CSharp.Main
             Transactions.Add(new Transaction(date, 0, amount));
         }
 
+        public decimal GetTotal()
+        {
+            return Transactions.Sum(t => t.Credit - t.Debit);
+        }
+
         public string GenerateStatement()
         {
             var statement = new StringBuilder();

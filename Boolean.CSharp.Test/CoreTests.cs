@@ -6,57 +6,68 @@ namespace Boolean.CSharp.Test
     [TestFixture]
     public class CoreTests
     {
-    /*
-
         [Test]
-        public void CreateAccountCreatesNewUserAccount()
+        public void UserCanCreateNewAccount()
         {
             string userName = "Tjommert";
             string password = "12345";
+            var branchType = BranchType.Personal;
 
-            database.AddUser(Account.CreateAccount(userName, password));
-            
-            var total = checkout.TotalPrice(basket);
+            var account = new Account(userName, password, branchType);
 
-            Assert.IsTrue(database.ContainsKey("Tjommert"));
+            Assert.That(account.Name, Is.EqualTo("Tjommert"));
+            Assert.That(account.Password, Is.EqualTo("12345"));
+            Assert.That(account.Branch, Is.EqualTo(BranchType.Personal));
+
         }
 
         [Test]
-        public void CreateSavingsAddedSavingsToAccount()
+        public void UserCanHaveMultipleSavingAccounts()
         {
-            var user1 = new User("Tjommert", "12345");
+            var account = new Account("Tjommert", "12345", BranchType.Personal);
 
-            user1.CreateSavings("savings1");
-        
-            Assert.Contains(user1, savings.Id);
+            var savings1 = new SavingsAccount("Piggy Bank", BranchType.Personal);
+            var savings2 = new SavingsAccount("Store Budget", BranchType.Business);
+
+            account.AddSavingsAccount(savings1);
+            account.AddSavingsAccount(savings2);
+
+            Assert.That(account.Savings.Count, Is.EqualTo(2));
         }
 
         [Test]
-        public void GenerateStatementHasDatesAmountsAndBalance()
+        public void UserCanDepositAndWithdrawMoney()
         {
-            var user1 = new User("Tjommert", "12345");
+            var account = new Account("Tjommert", "12345", BranchType.Personal);
+            var savings1 = new SavingsAccount("Piggy Bank", BranchType.Personal);
+            account.AddSavingsAccount(savings1);
 
-            var savings = user1.CreateSavings("savings1");
-            var statement = GenerateStatement(user1.savings[1]);                    
-        
-            Assert.Contains(statement, $"Date");
-            Assert.Contains(statement, $"Credit");
-            Assert.Contains(statement, $"Debit");
-            Assert.Contains(statement, $"Balance");                                          
+            account.SelectedSavings.Deposit(1000, DateTime.Now);
+            Assert.That(account.SelectedSavings.GetTotal(), Is.EqualTo(1000));
+
+            account.SelectedSavings.Withdraw(300, DateTime.Now);
+            Assert.That(account.SelectedSavings.GetTotal(), Is.EqualTo(700));
         }
 
         [Test]
-        public void DepositAndWithdrawFundsFromAccount()
+        public void CustomerCanGenerateTransactionStatement()
         {
-            var user1 = new User("Tjommert", "12345");
-            var savings = user1.CreateSavings("savings1");
+            var account = new Account("Tjommert", "12345", BranchType.Personal);
+            var savings1 = new SavingsAccount("Piggy Bank", BranchType.Personal);
+            account.AddSavingsAccount(savings1);
 
-            savings.Deposit(4000.00);
-            Assert.That(savings.Balance, Is.EqualTo(4000.00));
+            account.SelectedSavings.Deposit(1000, DateTime.Now);
+            account.SelectedSavings.Deposit(2000, DateTime.Now);
+            account.SelectedSavings.Withdraw(500, DateTime.Now);
+            var statement = account.GenerateSelectedSavingsStatement();
 
-            savings.Withdraw(2500.00);
-            Assert.That(savings.Balance, Is.EqualTo(1500.00));
+            Assert.IsTrue(statement.Contains("date"));
+            Assert.IsTrue(statement.Contains("credit"));
+            Assert.IsTrue(statement.Contains("debit"));
+            Assert.IsTrue(statement.Contains("balance"));
+            Assert.IsTrue(statement.Contains("1000.00"));
+            Assert.IsTrue(statement.Contains("2000.00"));
+            Assert.IsTrue(statement.Contains("500.00"));
         }
-    */
     }
 }
